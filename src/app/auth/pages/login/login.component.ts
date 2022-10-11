@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 import { AuthService } from '../../services/auth.service';
 
@@ -25,12 +26,19 @@ export class LoginComponent {
   login(): void {
     const { email, password } = this.miFormulario.value;
     this.authService.login(email, password)
-      .subscribe(ok => {
-        if (ok) {
-          this.router.navigate(['/protected', 'dashboard']);
-        } else {
-          console.log('NO PUDO INICIAR SESIÓN!!!');
-        }
+      .subscribe({
+        next: resp => {
+          if (resp === true) {
+            this.router.navigate(['/protected', 'dashboard']);
+          }
+        },
+        error: err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.msg,
+          })
+        },
       });
   }
 

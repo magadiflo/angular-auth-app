@@ -25,10 +25,11 @@ export class LoginComponent {
   login(): void {
     const { email, password } = this.miFormulario.value;
     this.authService.login(email, password)
-      .subscribe(response => {
-        console.log(response);
-        if (response.ok === true) {
+      .subscribe(ok => {
+        if (ok) {
           this.router.navigate(['/protected', 'dashboard']);
+        } else {
+          console.log('NO PUDO INICIAR SESIÓN!!!');
         }
       });
   }

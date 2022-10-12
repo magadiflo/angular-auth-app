@@ -35,6 +35,11 @@ export class AuthService {
       );
   }
 
+  logout(): void {
+    localStorage.removeItem('token');//* Solo eliminará el token del localStorage
+    localStorage.clear(); //* Nos aseguramos y eliminamos cualquier cosa que esté en el localstorage (eso incluía el token, aunque lo eliminamos en la línea anterior)
+  }
+
   validarToken(): Observable<boolean> {
     const headers = new HttpHeaders().set('x-token', localStorage.getItem('token') || '');
     return this.http.get<AuthResponse>(`${this.url}/auth/renew`, { headers })

@@ -21,16 +21,10 @@ export class AuthService {
   login(email: string, password: string): Observable<boolean> {
     return this.http.post<AuthResponse>(`${this.url}/auth`, { email, password })
       .pipe(
-        tap(resp => {
-          if (resp.ok) {
-            localStorage.setItem('token', resp.token!);
-            this._usuario = {
-              name: resp.name!,
-              uid: resp.uid!,
-            }
-          }
+        map(({ ok, token }) => { //* Desestructurando
+          localStorage.setItem('token', token!);
+          return ok;
         }),
-        map(resp => resp.ok),
         catchError(err => throwError(() => err.error)),
       );
   }
@@ -49,6 +43,7 @@ export class AuthService {
           this._usuario = {
             name: res.name!,
             uid: res.uid!,
+            email: res.email!,
           }
           return res.ok;
         }),
@@ -61,10 +56,6 @@ export class AuthService {
       .pipe(
         map(res => {
           localStorage.setItem('token', res.token!);
-          this._usuario = {
-            name: res.name!,
-            uid: res.uid!,
-          }
           return res.ok;
         }),
         catchError(err => throwError(() => err.error))

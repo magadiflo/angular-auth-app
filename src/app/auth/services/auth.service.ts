@@ -56,4 +56,19 @@ export class AuthService {
       );
   }
 
+  registro(name: string, email: string, password: string): Observable<boolean> {
+    return this.http.post<AuthResponse>(`${this.url}/auth/new`, { name, email, password })
+      .pipe(
+        map(res => {
+          localStorage.setItem('token', res.token!);
+          this._usuario = {
+            name: res.name!,
+            uid: res.uid!,
+          }
+          return res.ok;
+        }),
+        catchError(err => throwError(() => err.error))
+      );
+  }
+
 }

@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { ValidarTokenGuard } from './guards/validar-token.guard';
+
 const routes: Routes = [
   {
     path: 'auth',
@@ -9,6 +11,8 @@ const routes: Routes = [
   {
     path: 'protected',
     loadChildren: () => import('./protected/protected.module').then(m => m.ProtectedModule),
+    canLoad: [ValidarTokenGuard],
+    canActivate: [ValidarTokenGuard],
   },
   { path: '**', redirectTo: 'auth' },
 ];
